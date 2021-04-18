@@ -17,7 +17,6 @@ def get_coords(img, point2d):
     )
 
 
-
 if '__main__'==__name__:
     img = cv2.imread('markers.png')
 
