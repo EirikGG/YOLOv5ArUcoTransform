@@ -4,5 +4,5 @@ Project transforms a point from a image to a new coordinate system defined with 
 
 To use, run function in main.py:
 ```
-get_coords("input image", "coordinate in image")
+get_coords("input image", "coordinate in image", ("width of new coords", "height"))
 ```
