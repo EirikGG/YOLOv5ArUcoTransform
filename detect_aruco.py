@@ -2,7 +2,7 @@ import cv2
 import statistics as stat
 
 
-def get_aruco(img, dictionary=cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_250)):
+def get_aruco_pos(img, dictionary=cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_250)):
     '''Detects aruco markers in cv2 input image and returns dictionary with id and 
     center points. If no markers are found returns None'''
 
@@ -24,7 +24,3 @@ def get_aruco(img, dictionary=cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_250)):
         ps[int(ID)] = (cen_x, cen_y)                # Save to dict id: (x, y)
 
     return ps if ps else None                       # If points are empty, return None
-
-if '__main__'==__name__:
-    img = cv2.imread('markers_per.jpg')
-    print(get_aruco(img))
