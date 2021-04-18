@@ -6,6 +6,8 @@ from homography import transform_to_new_coord
 def get_coords(img, point2d, new_coord_res=(100,100)):
     aruco_points = get_aruco_pos(img)
 
+    print(aruco_points)
+
     x, y = None, None
     if aruco_points:
         x, y = transform_to_new_coord(
@@ -25,4 +27,4 @@ def get_coords(img, point2d, new_coord_res=(100,100)):
 if '__main__'==__name__:
     img = cv2.imread('markers.png')
 
-    print(get_coords(img, (430, 451), (1000, 100)))
+    print(get_coords(img, (430, 451), (1000, 1000)))
