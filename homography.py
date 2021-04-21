@@ -20,5 +20,5 @@ def transform_to_new_coord(point, pixel_coords, res=(100,100)):
 
     new_p = new_p/new_p[-1]                         # Remove omega value
 
-    return new_p[:-1]
+    return *new_p[:-1], h
 

@@ -23,4 +23,5 @@ def get_aruco_pos(img, dictionary=cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_25
 
         ps[int(ID)] = (cen_x, cen_y)                # Save to dict id: (x, y)
 
+
     return ps if 4==len(ps) else None               # If square is not found, return None

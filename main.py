@@ -1,16 +1,14 @@
 import cv2
 
-from detect_aruco import get_aruco_pos
-from homography import transform_to_new_coord
+from .detect_aruco import get_aruco_pos
+from .homography import transform_to_new_coord
 
 def get_coords(img, point2d, new_coord_res=(100,100)):
     aruco_points = get_aruco_pos(img)
 
-    print(aruco_points)
-
-    x, y = None, None
+    x, y, h = None, None, None
     if aruco_points:
-        x, y = transform_to_new_coord(
+        x, y, h = transform_to_new_coord(
             point=point2d,
             pixel_coords=(
                 aruco_points[0],
@@ -19,8 +17,11 @@ def get_coords(img, point2d, new_coord_res=(100,100)):
                 aruco_points[3]),
             res=new_coord_res
         )
+
+    if any((x, y)):
+        x,y = tuple(map(int, (x, y)))
     
-    return x,y
+    return (x, y), aruco_points, h
 
 
 
