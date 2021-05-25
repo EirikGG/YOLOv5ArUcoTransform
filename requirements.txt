@@ -1,0 +1,4 @@
+opencv-contrib-python==4.5.1.48
+opencv-python==4.5.1.48
+numpy==1.19.2
+torch==1.8.1

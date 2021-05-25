@@ -1,5 +1,7 @@
 # Inference with [YOLOv5](https://github.com/ultralytics/yolov5), ArUco markers, and perspective correction.
 
+Tested with python 3.8.10.
+
 ## To use:
 Update path in line 25 in yolo_inference.py with path to custom weights.
 Run yolo_inference.py to start.
