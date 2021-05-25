@@ -3,7 +3,15 @@
 Tested with python 3.8.10.
 
 ## To use:
-Update path in line 25 in yolo_inference.py with path to custom weights.
+Generate markers with create_markers.py.
+Place markers in a square following this pattern:
+<pre>
+id0-----id1<br />
+|         |<br /> 
+|         |<br /> 
+id4-----id3
+</pre>
+Update path in yolo_inference.py, line 25, with path to custom weights.
 Run yolo_inference.py to start.
 
 ### Init:
