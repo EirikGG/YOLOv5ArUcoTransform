@@ -86,9 +86,8 @@ while True:
     if 115 == key:                                      # Press s to save image
         pil_img = Image.fromarray(numpy_horizontal)
 
-        now = datetime.datetime.now()
-        current_timestamp = now.strftime("%Y%m%d-%H%M%S")     # Current datetime
-        print(type(current_timestamp))
+        now = datetime.datetime.now()                   # Create timestamped name
+        current_timestamp = now.strftime("%Y%m%d-%H%M%S")
         image_name = f'image{current_timestamp}.jpg'
 
         pil_img.save(image_name)
