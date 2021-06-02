@@ -22,7 +22,7 @@ def get_empty_img(map_size = (1000, 1000)):
 yolov5s = torch.hub.load(                               # Load yolo model
     'ultralytics/yolov5', 
     'custom', 
-    path_or_model='yolos_weights/best.pt'
+    'weights/best.pt'
 )
 
 #yolov5s = yolov5s.fuse().autoshape()
