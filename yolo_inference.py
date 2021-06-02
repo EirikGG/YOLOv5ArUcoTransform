@@ -84,7 +84,8 @@ while True:
     key = cv2.waitKey(1)                                # Wait for user to type 
 
     if 115 == key:                                      # Press s to save image
-        pil_img = Image.fromarray(numpy_horizontal)
+        rgb_img = cv2.cvtColor(numpy_horizontal, cv2.COLOR_BGR2RGB)
+        pil_img = Image.fromarray(rgb_img)
 
         now = datetime.datetime.now()                   # Create timestamped name
         current_timestamp = now.strftime("%Y%m%d-%H%M%S")

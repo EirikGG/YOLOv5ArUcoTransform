@@ -1,5 +1,6 @@
 import cv2
 import statistics as stat
+import numpy as np
 
 
 def get_aruco_pos(img, dictionary=cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_250)):
