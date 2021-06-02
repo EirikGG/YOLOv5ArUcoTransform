@@ -1,7 +1,8 @@
-import torch, cv2
+import torch, cv2, datetime
 
 import numpy as np
 
+from PIL import Image
 from transform_coordinates import get_coords
 
 def add_border(img, size=(10, 10, 10, 10)):
@@ -80,7 +81,22 @@ while True:
 
     cv2.imshow('preview', numpy_horizontal)             # Show both images
 
-    if cv2.waitKey(1) & 0xFF == ord('q'): break         # Wait for user to type "q" to break
+    key = cv2.waitKey(1)                                # Wait for user to type 
 
+    if 115 == key:                                      # Press s to save image
+        pil_img = Image.fromarray(numpy_horizontal)
+
+        now = datetime.datetime.now()
+        current_timestamp = now.strftime("%Y%m%d-%H%M%S")     # Current datetime
+        print(type(current_timestamp))
+        image_name = f'image{current_timestamp}.jpg'
+
+        pil_img.save(image_name)
+        print(f'Saved image as {image_name}')
+
+
+    elif 113 == key: break                              # "q" to break
+
+    
 cap.release()
 cv2.destroyAllWindows()
