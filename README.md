@@ -1,6 +1,10 @@
 # Inference with [YOLOv5](https://github.com/ultralytics/yolov5), ArUco markers, and perspective correction.
 
 Tested with python 3.8.10.
+Installed torch with:
+```
+pip3 install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio===0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
+```
 
 ## To use:
 Generate markers with create_markers.py.
