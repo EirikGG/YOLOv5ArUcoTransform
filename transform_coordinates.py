@@ -36,9 +36,9 @@ def transform_to_new_coord(point, pixel_coords, res=(100,100)):
     
     dst = np.float32([                              # Destination square
         [0,0],
-        [res[0]-1,0],
-        [res[0]-1,res[1]-1],
-        [0,res[1]-1]
+        [res[1]-1,0],
+        [res[1]-1,res[0]-1],
+        [0,res[0]-1]
     ])
 
     h, _ = cv2.findHomography(src, dst)             # Find transformation matrix
