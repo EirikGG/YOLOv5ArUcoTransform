@@ -1,4 +1,4 @@
-import torch, cv2, datetime, imutils
+import torch, cv2, datetime, imutils, os
 
 import numpy as np
 
@@ -39,7 +39,7 @@ def save_str_timestamp(text_name, **kwargs):
             f.writelines(f'{key}: {value}\n')
 
 
-yolov5s = torch.hub.load(                               # Load yolo model
+yolov5x = torch.hub.load(                               # Load yolo model
     'ultralytics/yolov5', 
     'custom', 
     'weights/best.pt'
@@ -47,16 +47,16 @@ yolov5s = torch.hub.load(                               # Load yolo model
 
 #yolov5s = yolov5s.fuse().autoshape()
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
-map_size = (1000, 1400)                                 # Initialize map
+map_size = (1000, 1400)                                 # Initialize map (height, width)
 map_img = get_empty_img(map_size)
 
 while True:
-    _, frame = cap.read()                               # Input frame
-    #frame = cv2.imread('testImg/markers.png')
+    #_, frame = cap.read()                               # Input frame
+    frame = cv2.imread('testImgs/IMG_20210603_153639.jpg')
 
-    out = yolov5s(frame)                                # Get predictions
+    out = yolov5x(frame)                                # Get predictions
 
     out_df = out.pandas().xyxy[0]                       # Read predictions to pandas
 
@@ -82,37 +82,44 @@ while True:
             int(max_thres['ymin'] + (max_thres['ymax'] - max_thres['ymin'])/2)
         )
 
+        frame = cv2.circle(frame, center_point, radius=0, color=(0, 0, 255), thickness=20)
                                                         # Translate from image to map
         new_coords, aruco_points, h = get_coords(frame, center_point, new_coord_res=map_size)
         obj_coords = new_coords
 
         if any(new_coords):                             # If successfull tranlation, draw map
             map_img = get_empty_img(map_size)
+            print(new_coords, map_img.shape)
             map_img = cv2.circle(map_img, new_coords, radius=0, color=(0, 0, 255), thickness=20)
-
+            cv2.imshow('test', map_img)
             for i in aruco_points:
                 frame = cv2.putText(frame, str(i), aruco_points[i], cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 3)
 
                                                         # Rezise map to fit frame
-    #map_img = cv2.resize(map_img, (frame.shape[0], frame.shape[0]))
-    map_img = imutils.resize(map_img, height=frame.shape[0])
+    map_img = cv2.resize(map_img, (frame.shape[0], frame.shape[0]))
+    #map_img = imutils.resize(map_img, height=frame.shape[0])
+
     numpy_horizontal = np.hstack((
         add_border(frame),
         add_border(map_img)
     ))
 
-    cv2.imshow('preview', numpy_horizontal)             # Show both images
+    numpy_horizontal = imutils.resize(numpy_horizontal, height=1000)
+
+    #cv2.imshow('preview', numpy_horizontal)             # Show both images
 
     key = cv2.waitKey(1)                                # Wait for user to type 
 
-    if 115 == key:                                      # Press s to save image
+    if 115 == key:                                      # Press "s" to save image
+        dirname = 'save'
+        if not os.path.isdir(dirname): os.mkdir(dirname)
         time_stamp = get_timestamp_str()
         save_img_timestamp(
             numpy_horizontal,
-            f'image{time_stamp}.jpg'
+            os.path.join(dirname, f'image{time_stamp}.jpg')
         )
         save_str_timestamp(
-            f'coords{time_stamp}.txt',
+            os.path.join(dirname, f'coords{time_stamp}.txt'),
             map_size = map_size,
             coordinates = obj_coords
         )
