@@ -60,7 +60,7 @@ while True:
 
     out_df = out.pandas().xyxy[0]                       # Read predictions to pandas
 
-    out_df = out_df[.9<out_df['confidence']]            # Filter confidence
+    out_df = out_df[.5<out_df['confidence']]            # Filter confidence
 
     obj_coords = None
     if not out_df.empty:                                # Draw rectangles to image
