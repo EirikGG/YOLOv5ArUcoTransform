@@ -89,9 +89,7 @@ while True:
 
         if any(new_coords):                             # If successfull tranlation, draw map
             map_img = get_empty_img(map_size)
-            print(new_coords, map_img.shape)
             map_img = cv2.circle(map_img, new_coords, radius=0, color=(0, 0, 255), thickness=20)
-            cv2.imshow('test', map_img)
             for i in aruco_points:
                 frame = cv2.putText(frame, str(i), aruco_points[i], cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 3)
 
@@ -106,7 +104,7 @@ while True:
 
     numpy_horizontal = imutils.resize(numpy_horizontal, height=1000)
 
-    #cv2.imshow('preview', numpy_horizontal)             # Show both images
+    cv2.imshow('preview', numpy_horizontal)             # Show both images
 
     key = cv2.waitKey(1)                                # Wait for user to type 
 
