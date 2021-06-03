@@ -1,4 +1,4 @@
-import torch, cv2, datetime
+import torch, cv2, datetime, imutils
 
 import numpy as np
 
@@ -19,6 +19,25 @@ def get_empty_img(map_size = (1000, 1000)):
     map_img.fill(255)
     return map_img
 
+def get_timestamp_str():
+    '''Gets timestamp as a string'''
+    now = datetime.datetime.now()                   # Create timestamped name
+    return now.strftime("%Y%m%d-%H%M%S")
+
+
+def save_img_timestamp(img, name):
+    '''Saves an image with timestamped name'''
+    rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    pil_img = Image.fromarray(rgb_img)
+    pil_img.save(name)
+    print(f'Saved image as {name}')
+
+def save_str_timestamp(text_name, **kwargs):
+    '''Takes a textfile and saves input as key and value'''
+    with open(text_name, 'w') as f:
+        for key, value in kwargs.items():
+            f.writelines(f'{key}: {value}\n')
+
 
 yolov5s = torch.hub.load(                               # Load yolo model
     'ultralytics/yolov5', 
@@ -28,9 +47,9 @@ yolov5s = torch.hub.load(                               # Load yolo model
 
 #yolov5s = yolov5s.fuse().autoshape()
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
-map_size = (1000, 1000)                                 # Initialize map
+map_size = (1000, 1400)                                 # Initialize map
 map_img = get_empty_img(map_size)
 
 while True:
@@ -43,6 +62,7 @@ while True:
 
     out_df = out_df[.9<out_df['confidence']]            # Filter confidence
 
+    obj_coords = None
     if not out_df.empty:                                # Draw rectangles to image
         for i, row in out_df.iterrows():
             frame = cv2.rectangle(
@@ -64,6 +84,7 @@ while True:
 
                                                         # Translate from image to map
         new_coords, aruco_points, h = get_coords(frame, center_point, new_coord_res=map_size)
+        obj_coords = new_coords
 
         if any(new_coords):                             # If successfull tranlation, draw map
             map_img = get_empty_img(map_size)
@@ -73,7 +94,8 @@ while True:
                 frame = cv2.putText(frame, str(i), aruco_points[i], cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 3)
 
                                                         # Rezise map to fit frame
-    map_img = cv2.resize(map_img, (frame.shape[0], frame.shape[0])) 
+    #map_img = cv2.resize(map_img, (frame.shape[0], frame.shape[0]))
+    map_img = imutils.resize(map_img, height=frame.shape[0])
     numpy_horizontal = np.hstack((
         add_border(frame),
         add_border(map_img)
@@ -84,15 +106,16 @@ while True:
     key = cv2.waitKey(1)                                # Wait for user to type 
 
     if 115 == key:                                      # Press s to save image
-        rgb_img = cv2.cvtColor(numpy_horizontal, cv2.COLOR_BGR2RGB)
-        pil_img = Image.fromarray(rgb_img)
-
-        now = datetime.datetime.now()                   # Create timestamped name
-        current_timestamp = now.strftime("%Y%m%d-%H%M%S")
-        image_name = f'image{current_timestamp}.jpg'
-
-        pil_img.save(image_name)
-        print(f'Saved image as {image_name}')
+        time_stamp = get_timestamp_str()
+        save_img_timestamp(
+            numpy_horizontal,
+            f'image{time_stamp}.jpg'
+        )
+        save_str_timestamp(
+            f'coords{time_stamp}.txt',
+            map_size = map_size,
+            coordinates = obj_coords
+        )
 
 
     elif 113 == key: break                              # "q" to break
